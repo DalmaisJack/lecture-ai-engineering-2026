@@ -244,7 +244,8 @@ elif picked:
         what = "ハイブリッドの方が入力トークンが少なく"
         wins = sum(y["input_tokens"] < x["input_tokens"] for x, y in zip(a["runs"], b["runs"]))
     n = min(len(a["runs"]), len(b["runs"]))
-    notes.append(f"{q0}は{wins}/{n}回で{what}、1回だけの偶然ではなかった。" if wins == n else
+    notes.append(f"{q0}の結果はまだ{n}回分なので、偶然の差かもしれない。回数を増やして確かめたい。" if n < 2 else
+                 f"{q0}は{wins}/{n}回で{what}、1回だけの偶然ではなかった。" if wins == n else
                  f"{q0}で{what.replace('少なく', '少なかった').replace('取れ', '取れた').replace('多く', '多かった')}のは{wins}/{n}回で、回によって結果がぶれた。")
 good_q = set(picked)
 single = [q for q in pairs if len({PAGES[p]["lecture"] for g in Q[q]["evidence"] for p in g}) == 1 and change(q)[2] < -0.05 and change(q)[0] <= 0]
@@ -283,7 +284,7 @@ section = f"""- 取り組んだレベル：発展
 - 比較した質問と、固定した条件（モデル・対象資料など）：
 {asked}
   - 根拠のページは、実行の前に教材JSONの本文を読んで決めた
-  - 固定した条件：モデルは {MODEL}、対象資料は第1〜3回の本講義214ページ、検索DBは同梱のもの。{method_names}で、各質問を{times} `scripts/compare_retrieval.py` で実行した。ハイブリッドの指示文は、検索ツールの使い方に関わる3か所だけ基本RAGと違う。サーバー側のエラー（503・500）が出た回は30秒待ってやり直し、時間はやり直した1回だけを測った
+  - 固定した条件：モデルは {MODEL}、対象資料は第1〜3回の本講義214ページ、検索DBは同梱のもの。{method_names}で、各質問を{times} `scripts/compare_retrieval.py` で実行した。ハイブリッドの指示文は、検索ツールの使い方に関わる3か所だけ基本RAGと違う。サーバー側のエラー（503・500）が出た回は30〜60秒待ってやり直し、時間はやり直した1回だけを測った
 - 結果（変更前後の回答・根拠、`--trace`の出力、時間・トークン数・生成API推定費用など）：
 
 {chr(10).join(table)}
