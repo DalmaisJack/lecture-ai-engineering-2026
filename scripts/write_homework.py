@@ -157,9 +157,9 @@ for qid, (a, b) in pairs.items():
             also = sum(not set(group) & set(r["retrieved"]) for r in a["runs"])
             name = NAMES.get(qid, [""] * 9)[i]
             one = len(b["runs"]) == 1
-            lines_bad.append(f"{qid}はハイブリッドでも「{name}」の根拠（{where(group)}）を"
+            lines_bad.append(f"{qid}で、ハイブリッドは「{name}」の根拠（{where(group)}）を"
                              + ("取れなかった" if one else f"{missed}/{len(b['runs'])}回取れなかった")
-                             + (("（基本RAGも取れなかった）。" if one else f"（基本RAGも{also}/{len(a['runs'])}回取れなかった）。") if also else "。"))
+                             + (("（基本RAGも取れなかった）。" if one else f"（基本RAGも{also}/{len(a['runs'])}回取れなかった）。") if also else "（基本RAGは取れていた）。"))
 
 for qid in [qid for qid in qids if Q[qid].get("unanswerable")]:
     told = {m: (sum(bool(r["declined"]) for r in by[(qid, m)]), len(by[(qid, m)])) for m in methods if (qid, m) in by}
