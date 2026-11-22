@@ -152,7 +152,7 @@ def run_with_retry(method: str, q: dict, model) -> dict:
             return record
         except (ModelHTTPError, RetryLater) as e:
             status = getattr(e, "status_code", 429)
-            if status not in (429, 503) or attempt == 3:
+            if status not in (429, 500, 502, 503, 504) or attempt == 3:
                 raise
             wait = 65 if status == 429 else 30
             print(f"  [待機] {e.__class__.__name__}（{status}）。{wait}秒待って再実行します", flush=True)
