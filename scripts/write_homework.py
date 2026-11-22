@@ -170,6 +170,8 @@ for qid in [qid for qid in qids if Q[qid].get("unanswerable")]:
 
 summary = (HW / "summary.md").read_text(encoding="utf-8").splitlines()
 table = [line for line in summary if line.startswith("|")]
+legend = [line for line in summary if line.startswith(("- 根拠の取得・引用", "- 要点の語句", "- 数値は平均"))]
+legend.append("- 資料にない質問は、回答に「確認できない」「記載されておりません」などの言い回しがあるかで判定した（機械的な目安）")
 diffs, inside = [], False
 for line in summary:
     if line.startswith("## "):
@@ -286,6 +288,8 @@ section = f"""- 取り組んだレベル：発展
   - 根拠のページは、実行の前に教材JSONの本文を読んで決めた
   - 固定した条件：モデルは {MODEL}、対象資料は第1〜3回の本講義214ページ、検索DBは同梱のもの。{method_names}で、各質問を{times} `scripts/compare_retrieval.py` で実行した。ハイブリッドの指示文は、検索ツールの使い方に関わる3か所だけ基本RAGと違う。サーバー側のエラー（503・500）が出た回は30〜60秒待ってやり直し、時間はやり直した1回だけを測った
 - 結果（変更前後の回答・根拠、`--trace`の出力、時間・トークン数・生成API推定費用など）：
+
+{chr(10).join(legend)}
 
 {chr(10).join(table)}
 
