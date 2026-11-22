@@ -126,3 +126,22 @@ def search_graph(query: str) -> str:
         return json.dumps({"error": str(e)}, ensure_ascii=False)
     except APIError as e:
         return json.dumps({"error": api_error_message(e.code)}, ensure_ascii=False)
+
+
+def search_hybrid(query: str) -> str:
+    """第1〜3回の本講義資料から、質問に関係するページを集めて本文と引用情報を返す。
+
+    質問に近いページの上位5件に、質問に出てくる回（第N回）・用語ごとの入口と、
+    1位のページと同じ章の前後ページを足す（最大8ページ）。whyは選んだ理由。
+    queryには質問文をそのまま入れる。回の番号や用語を省かない。
+    """
+    import sqlite3
+    from google.genai.errors import APIError
+    from app.hybrid import search_hybrid as search
+
+    try:
+        return json.dumps(search(query), ensure_ascii=False)
+    except (ValueError, OSError, sqlite3.Error) as e:
+        return json.dumps({"error": str(e), "results": []}, ensure_ascii=False)
+    except APIError as e:
+        return json.dumps({"error": api_error_message(e.code), "results": []}, ensure_ascii=False)
